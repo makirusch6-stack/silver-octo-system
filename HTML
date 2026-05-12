@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teaching End of Pathway Practice Test</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Teaching End of Pathway Practice Test</h1>
+
+  <div class="top-bar">
+    <div id="progressText">Question 1 / 10</div>
+    <div id="timer">00:00</div>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="card" id="quizCard">
+    <div class="question" id="question"></div>
+
+    <div id="options"></div>
+
+    <button onclick="nextQuestion()">Next Question</button>
+  </div>
+
+  <div class="card hidden" id="resultCard">
+    <h2 id="scoreText"></h2>
+
+    <div id="review"></div>
+
+    <button onclick="restartQuiz()">Retry Test</button>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
