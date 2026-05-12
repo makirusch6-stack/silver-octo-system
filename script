@@ -1,0 +1,293 @@
+const questions = [
+
+{
+question:"What Supreme Court case declared segregation unconstitutional in public schools?",
+options:[
+"Plessy v. Ferguson",
+"Brown v. Board of Education",
+"Tinker v. Des Moines",
+"Roe v. Wade"
+],
+answer:1,
+explanation:"Brown v. Board ended racial segregation in public schools."
+},
+
+{
+question:"Which amendment protects freedom of speech?",
+options:[
+"First Amendment",
+"Second Amendment",
+"Fourth Amendment",
+"Fifth Amendment"
+],
+answer:0,
+explanation:"The First Amendment protects speech and expression."
+},
+
+{
+question:"What does IDEA stand for?",
+options:[
+"Individuals with Disabilities Education Act",
+"Independent Development Education Act",
+"Instructional Development Equity Act",
+"Integrated Disabilities Education Act"
+],
+answer:0,
+explanation:"IDEA protects educational rights for students with disabilities."
+},
+
+{
+question:"Which case involved students wearing black armbands?",
+options:[
+"Tinker v. Des Moines",
+"Brown v. Board",
+"Hazelwood v. Kuhlmeier",
+"Plessy v. Ferguson"
+],
+answer:0,
+explanation:"Tinker protected symbolic student speech."
+},
+
+{
+question:"Title IX prevents discrimination based on:",
+options:[
+"Religion",
+"Race",
+"Gender",
+"Age"
+],
+answer:2,
+explanation:"Title IX prohibits sex discrimination in education."
+},
+
+{
+question:"Which case established 'separate but equal'?",
+options:[
+"Brown v. Board",
+"Plessy v. Ferguson",
+"Tinker v. Des Moines",
+"Gideon v. Wainwright"
+],
+answer:1,
+explanation:"Plessy created the separate but equal doctrine."
+},
+
+{
+question:"FERPA protects:",
+options:[
+"School lunches",
+"Teacher contracts",
+"Student educational records",
+"School transportation"
+],
+answer:2,
+explanation:"FERPA protects educational record privacy."
+},
+
+{
+question:"Which case limited school-sponsored speech?",
+options:[
+"Tinker v. Des Moines",
+"Hazelwood v. Kuhlmeier",
+"Brown v. Board",
+"Miranda v. Arizona"
+],
+answer:1,
+explanation:"Hazelwood allowed schools to regulate school-sponsored student speech."
+},
+
+{
+question:"The Lemon Test came from:",
+options:[
+"Lemon v. Kurtzman",
+"Roe v. Wade",
+"Tinker v. Des Moines",
+"Brown v. Board"
+],
+answer:0,
+explanation:"The Lemon Test evaluates church-state separation."
+},
+
+{
+question:"IDEA guarantees:",
+options:[
+"Free Appropriate Public Education",
+"Mandatory college",
+"Religious freedom",
+"Teacher salaries"
+],
+answer:0,
+explanation:"IDEA guarantees FAPE for students with disabilities."
+}
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+let selectedAnswer = null;
+let userAnswers = [];
+let seconds = 0;
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+
+function loadQuestion(){
+
+const q = questions[currentQuestion];
+
+questionEl.textContent = q.question;
+
+optionsEl.innerHTML = "";
+
+q.options.forEach((option,index)=>{
+
+const div = document.createElement("div");
+
+div.classList.add("option");
+
+div.textContent = option;
+
+div.onclick = ()=>{
+
+document.querySelectorAll(".option")
+.forEach(o=>o.classList.remove("selected"));
+
+div.classList.add("selected");
+
+selectedAnswer = index;
+
+};
+
+optionsEl.appendChild(div);
+
+});
+
+progressText.textContent =
+`Question ${currentQuestion + 1} / ${questions.length}`;
+
+progressBar.style.width =
+`${((currentQuestion + 1) / questions.length) * 100}%`;
+
+}
+
+function nextQuestion(){
+
+if(selectedAnswer === null){
+
+alert("Please choose an answer.");
+
+return;
+
+}
+
+userAnswers.push(selectedAnswer);
+
+if(selectedAnswer === questions[currentQuestion].answer){
+
+score++;
+
+}
+
+selectedAnswer = null;
+
+currentQuestion++;
+
+if(currentQuestion < questions.length){
+
+loadQuestion();
+
+}else{
+
+showResults();
+
+}
+
+}
+
+function showResults(){
+
+document.getElementById("quizCard")
+.classList.add("hidden");
+
+document.getElementById("resultCard")
+.classList.remove("hidden");
+
+const percentage =
+Math.round((score / questions.length) * 100);
+
+document.getElementById("scoreText")
+.textContent =
+`Final Score: ${score}/${questions.length} (${percentage}%)`;
+
+const review = document.getElementById("review");
+
+review.innerHTML = "";
+
+questions.forEach((q,index)=>{
+
+const div = document.createElement("div");
+
+div.style.marginTop = "25px";
+
+const correct =
+userAnswers[index] === q.answer;
+
+div.innerHTML = `
+<h3>${index + 1}. ${q.question}</h3>
+
+<p>Your Answer:
+<strong>${q.options[userAnswers[index]]}</strong></p>
+
+<p>Correct Answer:
+<strong>${q.options[q.answer]}</strong></p>
+
+<p class="${correct ? 'correct' : 'incorrect'}">
+${correct ? 'Correct' : 'Incorrect'}
+</p>
+
+<p>${q.explanation}</p>
+`;
+
+review.appendChild(div);
+
+});
+
+}
+
+function restartQuiz(){
+
+currentQuestion = 0;
+score = 0;
+selectedAnswer = null;
+userAnswers = [];
+seconds = 0;
+
+document.getElementById("quizCard")
+.classList.remove("hidden");
+
+document.getElementById("resultCard")
+.classList.add("hidden");
+
+loadQuestion();
+
+}
+
+setInterval(()=>{
+
+seconds++;
+
+const mins =
+String(Math.floor(seconds / 60)).padStart(2,'0');
+
+const secs =
+String(seconds % 60).padStart(2,'0');
+
+document.getElementById("timer")
+.textContent =
+`${mins}:${secs}`;
+
+},1000);
+
+loadQuestion();
